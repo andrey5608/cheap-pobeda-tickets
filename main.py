@@ -1,44 +1,54 @@
 import time
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-import base64
 import configparser
 import codecs
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 
 config = configparser.ConfigParser()
 config.readfp(codecs.open("settings.ini", "r", "utf8"))
-#config.read('settings.ini').decode('utf8')
-# #-------------
 
-sleepTime = 0.3 #300 ms delay time
+sleepTime = 0.5 #300 ms delay time
 from_IataCode = config.get("DEFAULT", "from_IataCode")
 to_IataCode = config.get("DEFAULT", "to_IataCode")
 checkLowerThan = config.get("DEFAULT", "checkLowerThan")
 chromeDriverPath = config.get("DEFAULT", "chromeDriverPath")
-#-------------
-if checkLowerThan == "YES":
+mode = config.get("DEFAULT", "mode")
+link = config.get("DEFAULT", "link")
+
+if checkLowerThan.lower() == "yes":
     lowerThan = int(config.get("DEFAULT", "lowerThan"))
 else:
     lowerThan = 0
-#-------------
-def init_driver():
+
+
+def init_driver(mode):
     options = webdriver.ChromeOptions()
-    options.add_argument("--start-maximized")
+    if mode.lower() == 'maximized':
+        print(mode.lower(), 'mode')
+        options.add_argument("--start-maximized")
+    elif mode.lower() == 'headless':
+        print(mode.lower(), 'mode')
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+    else:
+        print(mode.lower(), 'mode')
     driver = webdriver.Chrome(chromeDriverPath, chrome_options=options)  # Optional argument, if not specified will search path.
     return driver
-#-------------
-def select_flight_params(driver,sleepTime,startPlace, to, elems, elementCounter, lowerThan):
+
+
+
+def select_flight_params(driver,sleepTime,startPlace, to, elems, elementCounter, lowerThan, sendStartPlaceOnce):
         time.sleep(sleepTime)
         field = driver.find_element_by_xpath('//*[@id="airtickets-form"]/div[1]/div[1]/input')
-        field.clear()
-        field.send_keys(startPlace)
-        time.sleep(sleepTime)
+        if sendStartPlaceOnce and elementCounter != 0:
+            time.sleep(sleepTime)
+        else:
+            field.clear()
+            field.send_keys(startPlace)
+            time.sleep(sleepTime)
         field = driver.find_element_by_xpath('//*[@id="airtickets-form"]/div[2]/div[1]/input')
         field.clear()
-        if to == "ALL":
+        if to.lower() == "all":
             field.send_keys(elems[elementCounter])
             endPlace = str(elems[elementCounter])
         else:
@@ -64,115 +74,50 @@ def select_flight_params(driver,sleepTime,startPlace, to, elems, elementCounter,
                 print("Tickets from ", startPlace, " to ", endPlace, ":")
                 print(route, "\n", dates, "\n", price[:-3].replace(" ", ""), " РУБ")
         except NoSuchElementException:
-            print("No tickets available from ", startPlace, " to ", endPlace, "!")
+             if len(elems) == 1:
+                 print("No tickets available from ", startPlace, " to ", endPlace, "!")
+        except StaleElementReferenceException:
+            if len(elems) == 1:
+                print("No tickets available from ", startPlace, " to ", endPlace, "!")
 
 
-def genMass(driver,sleepTime):
-    
-    a = []
-    #1 столбец
-        #A
-    for h in range(2,4):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(1,1,h)
-        a.append(text)
-        h += 1
-        #Б
-    for h in range(2,4):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(1,2,h)
-        a.append(text)
-        h += 1
-            #В
-    for h in range(2,5):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(1,3,h)
-        a.append(text)
-        h += 1
-        #G
-    for h in range(2,3):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(1,4,h)
-        a.append(text)
-        h += 1
-            #E
-    for h in range(2,4):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(1,5,h)
-        a.append(text)
-        h += 1
-#2 столбец
-        
-    for h in range(2,8):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(2,1,h)
-        a.append(text)
-        h += 1
-    for h in range(2,3):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(2,2,h)
-        a.append(text)
-        h += 1
-    for h in range(2,8):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(2,3,h)
-        a.append(text)
-        h += 1
-    for h in range(2,5):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(2,4,h)
-        a.append(text)
-        h += 1
-        
-        #3 столбец
-    for h in range(2,4):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(3,1,h)
-        a.append(text)
-        h += 1
-    for h in range(2,3):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(3,2,h)
-        a.append(text)
-        h += 1
-    for h in range(2,8):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(3,3,h)
-        a.append(text)
-        h += 1
-    for h in range(2,5):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(3,4,h)
-        a.append(text)
-        h += 1
-    for h in range(2,3):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(3,5,h)
-        a.append(text)
-        h += 1        
-    for h in range(2,3):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(3,6,h)
-        a.append(text)
-        h += 1
-    for h in range(2,4):
-        text = ('//*[@id="airtickets-form"]/div[1]/div[2]/div/div[{0}]/div[{1}]/div[{2}]').format(3,7,h)
-        a.append(text)
-        h += 1
-    driver.get('https://www.pobeda.aero/information/book/search_cheap_tickets')
+
+def genMass(driver, sleepTime):
     time.sleep(sleepTime)
     elems = []
+    first_iata_code = ''
     try:
-        for i in range(len(a)):
-            elem = driver.find_element_by_xpath(a[i]).get_attribute("data-iata")
-            elems.append(elem)
-            #print("iata code(1 from): ", elem)
-            #print(elem)
+        countriesList = driver.find_elements_by_class_name('form-dropoutList__item')
+        for country in range(len(countriesList)):
+            iataCode = countriesList[country].get_attribute("data-iata")
+            if iataCode:
+                if iataCode == first_iata_code:
+                    return elems
+                if country == 0:
+                    first_iata_code = iataCode
+                elems.append(iataCode)
+
     except NoSuchElementException:
         print("NoSuchElementException")
-    return elems
 
 
-#-------------------------------
 
 if __name__ == "__main__":
     elems = []
-    driver = init_driver()
-    elems = genMass(driver,sleepTime)
-    if to_IataCode == "ALL":
+    if mode.lower() == 'debug':
+        debug = True
+    else:
+        debug = False
+    driver = init_driver(mode)
+    driver.get(link)
+    if to_IataCode.lower() == "all":
+        elems = genMass(driver, sleepTime)
         for i in range(len(elems)):
+            if debug:
+                print(elems[i])
             if from_IataCode != elems[i]:
-                select_flight_params(driver, sleepTime, from_IataCode, to_IataCode, elems, i, lowerThan)
+                select_flight_params(driver, sleepTime, from_IataCode, to_IataCode, elems, i, lowerThan, True)
     elif from_IataCode != to_IataCode:
-        select_flight_params(driver, sleepTime, from_IataCode, to_IataCode, elems, 0, lowerThan)
+        select_flight_params(driver, sleepTime, from_IataCode, to_IataCode, '1', 0, lowerThan, False)
     driver.quit()
-
-
 # while not msvcrt.kbhit():   # не нажата ли клавиша?
-#     pass
-
