@@ -13,7 +13,6 @@ to_IataCode = config.get("DEFAULT", "to_IataCode")
 checkLowerThan = config.get("DEFAULT", "checkLowerThan")
 chromeDriverPath = config.get("DEFAULT", "chromeDriverPath")
 link = config.get("DEFAULT", "link")
-iata_codes_xpath = config.get("DEFAULT", "iata_codes_xpath")
 
 if checkLowerThan == "YES":
     lowerThan = int(config.get("DEFAULT", "lowerThan"))
