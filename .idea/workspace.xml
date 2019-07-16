@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d480d0c9-1b25-4b2f-adc7-78f8ceb94de4" name="Default" comment="Iata codes getter added&#10;Small code refactoring">
+    <list default="true" id="d480d0c9-1b25-4b2f-adc7-78f8ceb94de4" name="Default" comment="Made renaming variables to be as PEP8 style guide.&#10;Replace XPATHs to more stable.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,7 +15,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
+            <state relative-caret-position="1819">
               <caret line="109" column="35" lean-forward="true" selection-start-line="109" selection-start-column="35" selection-end-line="109" selection-end-column="35" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -183,7 +182,14 @@
       <option name="project" value="LOCAL" />
       <updated>1563197397571</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Made renaming variables to be as PEP8 style guide.&#10;Replace XPATHs to more stable.">
+      <created>1563262270620</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1563262270620</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -216,7 +222,8 @@
     </ignored-roots>
     <MESSAGE value="Iata codes getter added&#10;Small code refactoring" />
     <MESSAGE value="Deleted unused parameter reference." />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted unused parameter reference." />
+    <MESSAGE value="Made renaming variables to be as PEP8 style guide.&#10;Replace XPATHs to more stable." />
+    <option name="LAST_COMMIT_MESSAGE" value="Made renaming variables to be as PEP8 style guide.&#10;Replace XPATHs to more stable." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://G:/vk/main.py" />
@@ -229,7 +236,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
+        <state relative-caret-position="1819">
           <caret line="109" column="35" lean-forward="true" selection-start-line="109" selection-start-column="35" selection-end-line="109" selection-end-column="35" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
